@@ -17,24 +17,24 @@
 	<body>
 		<video id="video" width="640"></video>
 		<div>
-				<a id="fullscreen" href="#">fullscreen</a>
+			<a id="fullscreen" href="#">fullscreen</a>
 		</div>
 		<div>
 			<select id="videoSelect">
-					<option value="North.mp4">North</option>
-					<option value="East.mp4">East</option>
-					<option value="South.mp4">South</option>
-					<option value="West.mp4">West</option>
+				<option value="North.mp4">North</option>
+				<option value="East.mp4">East</option>
+				<option value="South.mp4">South</option>
+				<option value="West.mp4">West</option>
 			</select>
 		</div>
 		<div>
-				<a id="scene1" class="sceneChange" href="#">red</a>
-				<a id="scene2" class="sceneChange" href="#">yellow</a>
-				<a id="scene3" class="sceneChange" href="#">green</a>
-				<a id="scene4" class="sceneChange" href="#">blue</a>
+			<a id="scene1" class="sceneChange" href="#">red</a>
+			<a id="scene2" class="sceneChange" href="#">yellow</a>
+			<a id="scene3" class="sceneChange" href="#">green</a>
+			<a id="scene4" class="sceneChange" href="#">blue</a>
 		</div>
 		<div>
-				<span id="currentTime"></span>
+			<span id="currentTime"></span>
 		</div>
 		<ul id="messages"></ul>
 		<form action="">
@@ -43,78 +43,78 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
 				
-				var clockInterval;
-				var sceneLength = 10; // 120 secs in final installation
-				var currentScene = 0;
-				var currentTime = 0;
-				var $currentTime = $('#currentTime');
-				var video = document.getElementById("video");
-				var sceneStart = 0;
-				var sceneEnd = sceneLength;
-				var socket = io();
+			var clockInterval;
+			var sceneLength = 10; // 120 secs in final installation
+			var currentScene = 0;
+			var currentTime = 0;
+			var $currentTime = $('#currentTime');
+			var video = document.getElementById("video");
+			var sceneStart = 0;
+			var sceneEnd = sceneLength;
+			var socket = io();
 
-				socket.on('sceneChanged', function(obj) {
-						currentScene = obj.index;
-						currentTime = obj.currentTime;
-						syncClock();
-						sceneChanged();
-				});
+			socket.on('sceneChanged', function(obj) {
+				currentScene = obj.index;
+				currentTime = obj.currentTime;
+				syncClock();
+				sceneChanged();
+			});
 
-				socket.on('chatMessage', function(msg){
-						$('#messages').append($('<li>').text(msg));
-				});
+			socket.on('chatMessage', function(msg){
+				$('#messages').append($('<li>').text(msg));
+			});
 
-				video.src = $('#videoSelect').val();
+			video.src = $('#videoSelect').val();
 
-				function syncClock() {
+			function syncClock() {
 
-						clearInterval(clockInterval);
+				clearInterval(clockInterval);
 
-						clockInterval = setInterval(function() {
-								if (currentTime === sceneLength - 1) {
-										currentTime = 0;
-								} else {
-										currentTime += 1;
-								}
+				clockInterval = setInterval(function() {
+					if (currentTime === sceneLength - 1) {
+						currentTime = 0;
+					} else {
+						currentTime += 1;
+					}
 
-								if (video.currentTime >= sceneEnd - 1) {
-										video.currentTime = sceneStart;
-										video.play();
-								}
-								
-								$currentTime.text(currentTime + 1);
-						}, 1000);
-
-				}
-
-				function sceneChanged() {
-						sceneStart = sceneLength * currentScene;
-						sceneEnd = sceneStart + sceneLength;
-						video.currentTime = sceneStart + currentTime;
+					if (video.currentTime >= sceneEnd - 1) {
+						video.currentTime = sceneStart;
 						video.play();
-				}
-				
-				$('#videoSelect').on('change', function() {
-						video.src = $('#videoSelect').val();
-				});
+					}
+					
+					$currentTime.text(currentTime + 1);
+				}, 1000);
 
-				$('.sceneChange').on('click', function() {
-						socket.emit('sceneChanged', 
-							{
-									index: $('.sceneChange').index(this),
-									currentTime: currentTime // unity will pass the current time synced to the audio
-							});
-				});
+			}
 
-				$('form').submit(function() {
-						socket.emit('chatMessage', $('#m').val());
-						$('#m').val('');
-						return false;
-				});
+			function sceneChanged() {
+				sceneStart = sceneLength * currentScene;
+				sceneEnd = sceneStart + sceneLength;
+				video.currentTime = sceneStart + currentTime;
+				video.play();
+			}
+			
+			$('#videoSelect').on('change', function() {
+				video.src = $('#videoSelect').val();
+			});
 
-				$('#fullscreen').on('click', function() {
-						video.webkitRequestFullscreen();
-				});
+			$('.sceneChange').on('click', function() {
+				socket.emit('sceneChanged', 
+					{
+						index: $('.sceneChange').index(this),
+						currentTime: currentTime // unity will pass the current time synced to the audio
+					});
+			});
+
+			$('form').submit(function() {
+				socket.emit('chatMessage', $('#m').val());
+				$('#m').val('');
+				return false;
+			});
+
+			$('#fullscreen').on('click', function() {
+				video.webkitRequestFullscreen();
+			});
 
 		</script>
 	</body>
