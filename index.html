@@ -55,12 +55,12 @@
 
 			socket.on('sceneChanged', function(obj) {
 				currentScene = obj.index;
-				currentTime = obj.currentTime;
+				currentTime = obj.time;
 				syncClock();
 				sceneChanged();
 			});
 
-			socket.on('chatMessage', function(msg){
+			socket.on('log', function(msg){
 				$('#messages').append($('<li>').text(msg));
 			});
 
@@ -102,12 +102,12 @@
 				socket.emit('sceneChanged', 
 					{
 						index: $('.sceneChange').index(this),
-						currentTime: currentTime // unity will pass the current time synced to the audio
+						time: currentTime // unity will pass the current time synced to the audio
 					});
 			});
 
 			$('form').submit(function() {
-				socket.emit('chatMessage', $('#m').val());
+				socket.emit('log', $('#m').val());
 				$('#m').val('');
 				return false;
 			});
