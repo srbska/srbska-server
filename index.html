@@ -60,11 +60,12 @@
 				sceneChanged();
 			});
 
-			socket.on('chatMessage', function(msg){
+			socket.on('chatMessage', function(msg) {
 				$('#messages').append($('<li>').text(msg));
+				$('#messages').scrollTop($('#messages').scrollHeight());
 			});
 
-			video.src = $('#videoSelect').val();
+			video.src = "http://localhost:80/" + $('#videoSelect').val();
 
 			function syncClock() {
 
