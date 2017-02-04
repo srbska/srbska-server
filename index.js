@@ -11,8 +11,8 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
     
-    socket.on('chatMessage', function(msg){
-        io.emit('chatMessage', msg);
+    socket.on('log', function(msg){
+        io.emit('log', msg);
     });
 
     socket.on('sceneChanged', function(obj){
