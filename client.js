@@ -7,16 +7,20 @@ var io = require('socket.io-client');
 var socket = io.connect('http://169.254.57.165:3000');
 var currentScene = 0;
 var currentTime = 0;
+var sceneStart = 0;
+var sceneEnd = sceneLength;
 var clockInterval;
 
 var options = {
     audioOutput:'hdmi', 
     blackBackground:true, 
-    disableKeys:true, 
-    disableOnScreenDisplay:true
+    disableKeys:false, 
+    disableOnScreenDisplay:false
 };
 
 omx.open(screen + '.mp4', options);
+
+resetClock();
 
 socket.on('connect', function() {
 	socket.emit('log', 'rpi connected');
@@ -27,13 +31,13 @@ socket.on('log', function(msg) {
 });
 
 socket.on('sceneChanged', function(obj){
-    currentScene = obj.index;
-    currentTime = obj.time;
+    currentScene = parseInt(obj.index);
+    currentTime = parseInt(obj.time);
+    resetClock();
     sceneStart = sceneLength * currentScene;
     sceneEnd = sceneStart + sceneLength;
     var seekTo = sceneStart + currentTime;
-    console.log("change to scene ", currentScene, ", at time ", seekTo);
-    resetClock();
+    console.log("change to scene", currentScene, "at", seekTo);
     omx.setPosition(seekTo);
 });
 
@@ -42,20 +46,23 @@ function resetClock() {
     clearInterval(clockInterval);
 
     clockInterval = setInterval(function() {
-        if (currentTime === sceneLength - 1) {
+        if (currentTime === sceneLength) {
             currentTime = 0;
         } else {
             currentTime += 1;
         }
 
-        if (!master) {
-            if (omx.getCurrentPosition() >= sceneEnd - 1) {
-                video.currentTime = sceneStart;
-                //omx.setPosition(sceneStart);
-            }
+	var currentPosition = omx.getCurrentPosition(); 
+
+	console.log("current position", currentPosition);
+	console.log("scene end", sceneEnd);
+
+        if (currentPosition >= sceneEnd) {
+	    console.log("restart scene");
+            omx.setPosition(sceneStart);
         }
 
-        console.log(currentTime);
+        //console.log(currentTime);
     }, 1000);
 
 }
