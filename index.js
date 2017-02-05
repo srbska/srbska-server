@@ -20,7 +20,7 @@ var options = {
     disableOnScreenDisplay:true
 };
 
-omx.open(screen + '.mp4', options);
+//omx.open(screen + '.mp4', options);
 
 app.use(express.static('public'));
 
@@ -40,8 +40,10 @@ io.on('connection', function(socket){
 		currentTime = obj.time;
         sceneStart = sceneLength * currentScene;
         sceneEnd = sceneStart + sceneLength;
+        var seekTo = sceneStart + currentTime;
+        console.log("change to scene ", currentScene, ", at time ", seekTo);
         resetClock();
-        omx.setPosition(sceneStart + currentTime);
+        //omx.setPosition(seekTo);
     });
 });
 
@@ -58,9 +60,10 @@ function resetClock() {
 
         if (omx.getCurrentPosition() >= sceneEnd - 1) {
             video.currentTime = sceneStart;
-            omx.setPosition(sceneStart);
+            //omx.setPosition(sceneStart);
         }
 
+        console.log(currentTime);
     }, 1000);
 
 }
