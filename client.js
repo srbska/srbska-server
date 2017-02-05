@@ -36,6 +36,7 @@ socket.on('sceneChanged', function(obj){
     resetClock();
     sceneStart = sceneLength * currentScene;
     sceneEnd = sceneStart + sceneLength;
+    console.log("scene end", sceneEnd);
     var seekTo = sceneStart + currentTime;
     console.log("change to scene", currentScene, "at", seekTo);
     omx.setPosition(seekTo);
@@ -52,13 +53,13 @@ function resetClock() {
             currentTime += 1;
         }
 
-	var currentPosition = omx.getCurrentPosition(); 
+        var currentPosition = omx.getCurrentPosition(); 
 
-	console.log("current position", currentPosition);
-	console.log("scene end", sceneEnd);
+        console.log("current position", currentPosition);
+        //console.log("scene end", sceneEnd);
 
         if (currentPosition >= sceneEnd) {
-	    console.log("restart scene");
+            console.log("restart scene");
             omx.setPosition(sceneStart);
         }
 
