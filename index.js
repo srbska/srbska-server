@@ -1,12 +1,18 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+//var express = require('express');
+//var app = express();
+//var http = require('http').Server(app);
+//var io = require('socket.io')(http);
 var omx = require('omx-interface');
+var io = require('socket.io');
+var server = http.createServer();
+var port = 3000;
+var ip = '169.254.57.164';
+server.listen(port, ip);
+var socket = io.listen(server);
 
 // node index.js north 10
 
-var port = 3000;
+
 var screen = process.argv[2];
 var sceneLength = process.argv[3]; // 120 secs in final installation
 var currentScene = 0;
@@ -22,11 +28,11 @@ var options = {
 
 //omx.open(screen + '.mp4', options);
 
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-});
+// app.get('/', function(req, res){
+//     res.sendFile(__dirname + '/index.html');
+// });
 
 io.on('connection', function(socket){
     
