@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.10.2",
     "omx-interface": "^1.2.0",
-    "socket.io": "^1.7.2"
+    "socket.io": "^1.7.2",
+    "socket.io-client": "^1.7.2"
   }
 }

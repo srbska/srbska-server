@@ -6,8 +6,6 @@ var omx = require('omx-interface');
 //var server = require('http').createServer();
 //var io = require('socket.io')(server);
 var port = 3000;
-var Server = require('socket.io');
-var io = new Server(port);
 
 // node index.js north 10
 var master = process.argv[2] || false;
