@@ -1,20 +1,10 @@
-//var express = require('express');
-//var app = express();
-//var http = require('http').Server(app);
-//var io = require('socket.io')(http);
+// node client.js north 10
+
+var screen = process.argv[2];
+var sceneLength = process.argv[3]; // 120 secs in final installation
 var omx = require('omx-interface');
-//var server = require('http').createServer();
-//var io = require('socket.io')(server);
-var port = 3000;
-
-// node index.js north 10
-var master = process.argv[2] || false;
-var screen = process.argv[3];
-var sceneLength = process.argv[4]; // 120 secs in final installation
-var ip = (master) ? 'localhost' : '169.254.57.164';
-//server.listen(port, ip);
-//var socket = io.listen(server);
-
+var io = require('socket.io-client');
+var socket = io.connect('http://169.254.57.165:3000');
 var currentScene = 0;
 var currentTime = 0;
 var clockInterval;
@@ -26,35 +16,25 @@ var options = {
     disableOnScreenDisplay:true
 };
 
-if (!master) {
-    //omx.open(screen + '.mp4', options);
-}
+omx.open(screen + '.mp4', options);
 
-// app.use(express.static('public'));
+socket.on('connect', function() {
+	socket.emit('log', 'rpi connected');
+});
 
-// app.get('/', function(req, res){
-//     res.sendFile(__dirname + '/index.html');
-// });
+socket.on('log', function(msg) {
+	console.log(msg);
+});
 
-io.on('connection', function(socket){
-    
-    socket.on('log', function(msg){
-        io.emit('log', msg);
-    });
-
-    socket.on('sceneChanged', function(obj){
-        //io.emit('sceneChanged', obj);
-        currentScene = obj.index;
-		currentTime = obj.time;
-        sceneStart = sceneLength * currentScene;
-        sceneEnd = sceneStart + sceneLength;
-        var seekTo = sceneStart + currentTime;
-        console.log("change to scene ", currentScene, ", at time ", seekTo);
-        resetClock();
-        if (!master) {
-            //omx.setPosition(seekTo);
-        }
-    });
+socket.on('sceneChanged', function(obj){
+    currentScene = obj.index;
+    currentTime = obj.time;
+    sceneStart = sceneLength * currentScene;
+    sceneEnd = sceneStart + sceneLength;
+    var seekTo = sceneStart + currentTime;
+    console.log("change to scene ", currentScene, ", at time ", seekTo);
+    resetClock();
+    omx.setPosition(seekTo);
 });
 
 function resetClock() {
@@ -79,9 +59,3 @@ function resetClock() {
     }, 1000);
 
 }
-
-// http.listen(port, function(){
-//     console.log('listening on *:' + port);
-// });
-
-console.log('listening on *:' + port);
