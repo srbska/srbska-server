@@ -74,6 +74,6 @@ function resetClock() {
 
 }
 
-http.listen(port, function(){
-    console.log('listening on *:' + port);
-});
+// http.listen(port, function(){
+//     console.log('listening on *:' + port);
+// });
