@@ -3,9 +3,8 @@
 //var http = require('http').Server(app);
 //var io = require('socket.io')(http);
 var omx = require('omx-interface');
-var io = require('socket.io');
-var http = require('http');
-var server = http.createServer();
+var server = require('http').createServer();
+var io = require('socket.io')(server);
 var port = 3000;
 var ip = '169.254.57.164';
 server.listen(port, ip);
