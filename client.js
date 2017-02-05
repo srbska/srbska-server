@@ -1,7 +1,7 @@
 // node client.js north 10
 
 var screen = process.argv[2];
-var sceneLength = process.argv[3]; // 120 secs in final installation
+var sceneLength = parseInt(process.argv[3]); // 120 secs in final installation
 var omx = require('omx-interface');
 var io = require('socket.io-client');
 var socket = io.connect('http://169.254.57.165:3000');
