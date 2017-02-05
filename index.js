@@ -6,7 +6,7 @@ var omx = require('omx-interface');
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 var port = 3000;
-var ip = '169.254.57.164';
+var ip = '169.254.57.165';
 server.listen(port, ip);
 var socket = io.listen(server);
 
