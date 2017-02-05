@@ -3,17 +3,19 @@
 //var http = require('http').Server(app);
 //var io = require('socket.io')(http);
 var omx = require('omx-interface');
-var server = require('http').createServer();
-var io = require('socket.io')(server);
+//var server = require('http').createServer();
+//var io = require('socket.io')(server);
 var port = 3000;
+var Server = require('socket.io');
+var io = new Server(port);
 
 // node index.js north 10
 var master = process.argv[2] || false;
 var screen = process.argv[3];
 var sceneLength = process.argv[4]; // 120 secs in final installation
 var ip = (master) ? 'localhost' : '169.254.57.164';
-server.listen(port, ip);
-var socket = io.listen(server);
+//server.listen(port, ip);
+//var socket = io.listen(server);
 
 var currentScene = 0;
 var currentTime = 0;
@@ -83,3 +85,5 @@ function resetClock() {
 // http.listen(port, function(){
 //     console.log('listening on *:' + port);
 // });
+
+console.log('listening on *:' + port);
