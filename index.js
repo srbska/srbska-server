@@ -6,15 +6,15 @@ var omx = require('omx-interface');
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 var port = 3000;
-var ip = '169.254.57.164';
+
+// node index.js north 10
+var master = process.argv[2] || false;
+var screen = process.argv[3];
+var sceneLength = process.argv[4]; // 120 secs in final installation
+var ip = (master) ? 'localhost' : '169.254.57.164';
 server.listen(port, ip);
 var socket = io.listen(server);
 
-// node index.js north 10
-
-
-var screen = process.argv[2];
-var sceneLength = process.argv[3]; // 120 secs in final installation
 var currentScene = 0;
 var currentTime = 0;
 var clockInterval;
@@ -26,7 +26,9 @@ var options = {
     disableOnScreenDisplay:true
 };
 
-//omx.open(screen + '.mp4', options);
+if (!master) {
+    //omx.open(screen + '.mp4', options);
+}
 
 // app.use(express.static('public'));
 
@@ -49,7 +51,9 @@ io.on('connection', function(socket){
         var seekTo = sceneStart + currentTime;
         console.log("change to scene ", currentScene, ", at time ", seekTo);
         resetClock();
-        //omx.setPosition(seekTo);
+        if (!master) {
+            //omx.setPosition(seekTo);
+        }
     });
 });
 
@@ -64,9 +68,11 @@ function resetClock() {
             currentTime += 1;
         }
 
-        if (omx.getCurrentPosition() >= sceneEnd - 1) {
-            video.currentTime = sceneStart;
-            //omx.setPosition(sceneStart);
+        if (!master) {
+            if (omx.getCurrentPosition() >= sceneEnd - 1) {
+                video.currentTime = sceneStart;
+                //omx.setPosition(sceneStart);
+            }
         }
 
         console.log(currentTime);
