@@ -18,3 +18,7 @@ socket.on('open', function(obj) {
     omx.open(video, obj.options);
     omx.setPosition(obj.time);
 });
+
+socket.on('close', function() {
+    omx.quit();
+});
