@@ -2,3 +2,4 @@ node_modules
 debug.log
 public/*.mp4
 *.mp4
+config.js
