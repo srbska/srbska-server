@@ -11,12 +11,12 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
-function log(message) {
-    socket.emit('log', message);
-}
-
 io.on('connection', function(socket){
     
+    function log(message) {
+        socket.emit('log', message);
+    }
+
     socket.on('log', function(msg){
         io.emit('log', msg);
         console.log(msg);
@@ -36,7 +36,7 @@ io.on('connection', function(socket){
             time: obj.time
         };
 
-        io.emit('open', opts);
+        io.to(obj.screen).emit('open', opts);
         log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
     });
 
