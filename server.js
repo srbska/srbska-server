@@ -1,4 +1,7 @@
-var port = 3000;
+var port = process.argv[2] || 3000;
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
 var Server = require('socket.io');
 var io = new Server(port, {});
 
@@ -9,7 +12,7 @@ io.on('connection', function(socket){
         console.log(msg);
     });
 
-    socket.on('sceneChanged', function(obj){
+    socket.on('sceneChanged', function(obj) {
         io.emit('sceneChanged', obj);
         console.log('change to scene', obj.index);
     });
@@ -29,4 +32,14 @@ io.on('connection', function(socket){
     });
 });
 
-console.log('listening on *:' + port);
+console.log('server listening on *:' + port);
+
+app.use(express.static('public'));
+
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
+
+http.listen(port, function(){
+    console.log('listening on *:' + port);
+});
