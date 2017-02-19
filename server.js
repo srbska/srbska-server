@@ -22,6 +22,10 @@ io.on('connection', function(socket){
         console.log(msg);
     });
 
+    socket.on('room', function(room) {
+        socket.join(room);
+    });
+
     socket.on('open', function(obj) {
         
         var opts = {
@@ -36,7 +40,7 @@ io.on('connection', function(socket){
             time: obj.time
         };
 
-        io.to(obj.screen).emit('open', opts);
+        io.sockets.in(obj.screen).emit('open', opts);
         log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
     });
 
