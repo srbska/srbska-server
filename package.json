@@ -18,7 +18,7 @@
   "homepage": "https://github.com/srbska/srbska-server#readme",
   "dependencies": {
     "express": "^4.10.2",
-    "omx-interface": "git+https://git@github.com/edsilv/node-omx-interface.git#defaults",
+    "omx-interface": "git+https://git@github.com/edsilv/node-omx-interface.git#loop",
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.2"
   }
