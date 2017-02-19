@@ -15,12 +15,14 @@ socket.on('log', function(msg) {
 });
 
 socket.on('open', function(obj) {
-    var video = obj.screen + '_' + obj.scene + '.mp4';
-    omx.stop();
+    var video = obj.screen + '.mp4';
     omx.open(video, obj.options);
-    omx.setPosition(obj.time);
 });
 
 socket.on('close', function() {
     omx.quit();
+});
+
+socket.on('seek', function(time) {
+    omx.setPosition(time);
 });

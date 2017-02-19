@@ -32,21 +32,25 @@ io.on('connection', function(socket){
             options: {
                 audioOutput:'hdmi', 
                 blackBackground: true, 
-                disableKeys: false, 
-                disableOnScreenDisplay: false
+                disableKeys: true, 
+                disableOnScreenDisplay: true,
+                loop: true
             },
-            screen: obj.screen,
-            scene: obj.scene,
-            time: obj.time
+            screen: obj.screen
         };
 
         io.sockets.in(obj.screen).emit('open', opts);
-        log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
+        log('open screen:' + opts.screen);
     });
 
     socket.on('close', function() {
         io.emit('close');
         log('close');
+    });
+
+    socket.on('seek', function(time) {
+        io.emit('seek', time);
+        log('seek', time);
     });
 });
 
