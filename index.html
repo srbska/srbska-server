@@ -56,15 +56,10 @@
 				};
 
 				socket.emit('open', opts);
-				log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
 			}
 
 			function close() {
 				socket.emit('close');
-			}
-
-			function log(message) {
-				socket.emit('log', message);
 			}
 
 			socket.on('log', function(msg){

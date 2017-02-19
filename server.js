@@ -11,6 +11,10 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
+function log(message) {
+    socket.emit('log', message);
+}
+
 io.on('connection', function(socket){
     
     socket.on('log', function(msg){
@@ -19,7 +23,8 @@ io.on('connection', function(socket){
     });
 
     socket.on('open', function(obj) {
-        io.emit('open', {
+        
+        var opts = {
             options: {
                 audioOutput:'hdmi', 
                 blackBackground: true, 
@@ -29,8 +34,15 @@ io.on('connection', function(socket){
             screen: obj.screen,
             scene: obj.scene,
             time: obj.time
-        });
-        console.log('open', obj);
+        };
+
+        io.emit('open', opts);
+        log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
+    });
+
+    socket.on('close', function() {
+        io.emit('close');
+        log('close');
     });
 });
 
