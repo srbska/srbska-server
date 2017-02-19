@@ -26,3 +26,7 @@ socket.on('close', function() {
 socket.on('seek', function(time) {
     omx.setPosition(time);
 });
+
+socket.on('stop', function(time) {
+    omx.stop();
+});

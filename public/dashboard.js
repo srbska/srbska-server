@@ -17,7 +17,11 @@ function seek() {
     socket.emit('seek', $('#time').val());
 }
 
-socket.on('log', function(msg){
+function stop() {
+    socket.emit('stop');
+}
+
+socket.on('log', function(msg) {
     $('#messages').append($('<li>').text(msg));
     $('#messages').scrollTop($('#messages').prop('scrollHeight'));
 });
@@ -32,6 +36,10 @@ $('#close').on('click', function() {
 
 $('#seek').on('click', function() {
     seek();
+});
+
+$('#stop').on('click', function() {
+    stop();
 });
 
 $('form').submit(function() {

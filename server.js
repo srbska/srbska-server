@@ -52,6 +52,11 @@ io.on('connection', function(socket){
         io.emit('seek', time);
         log('seek: ' + time);
     });
+
+    socket.on('stop', function() {
+        io.emit('stop');
+        log('stop');
+    });
 });
 
 http.listen(port, function(){
