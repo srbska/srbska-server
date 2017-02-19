@@ -13,7 +13,8 @@ socket.on('log', function(msg) {
 	console.log(msg);
 });
 
-socket.on('play', function(obj) {
-    omx.open(obj.video, obj.options);
+socket.on('open', function(obj) {
+    var video = obj.screen + '_' + obj.scene + '.mp4';
+    omx.open(video, obj.options);
     omx.setPosition(obj.time);
 });

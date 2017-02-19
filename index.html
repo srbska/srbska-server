@@ -18,26 +18,24 @@
 		<script src="jquery.min.js"></script>
 	</head>
 	<body>
-		<video id="video" width="640"></video>
 		<div>
-			<a id="fullscreen" href="#">fullscreen</a>
-		</div>
-		<div>
-			<select id="videoSelect">
-				<option value="North.mp4">North</option>
-				<option value="East.mp4">East</option>
-				<option value="South.mp4">South</option>
-				<option value="West.mp4">West</option>
+			<select id="screenSelect">
+				<option value="north">North</option>
+				<option value="east">East</option>
+				<option value="south">South</option>
+				<option value="west">West</option>
 			</select>
 		</div>
 		<div>
-			<a id="scene1" class="sceneChange" href="#">red</a>
-			<a id="scene2" class="sceneChange" href="#">yellow</a>
-			<a id="scene3" class="sceneChange" href="#">green</a>
-			<a id="scene4" class="sceneChange" href="#">blue</a>
+			<select id="sceneSelect">
+				<option value="0">Red</option>
+				<option value="1">Yellow</option>
+				<option value="2">Green</option>
+				<option value="3">Blue</option>
+			</select>
 		</div>
 		<div>
-			<span id="currentTime"></span>
+			<button id="open">Open Video</button>
 		</div>
 		<ul id="messages"></ul>
 		<form action="">
@@ -46,78 +44,37 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
 				
-			var clockInterval;
-			var sceneLength = 10; // 120 secs in final installation
-			var currentScene = 0;
-			var currentTime = 0;
-			var $currentTime = $('#currentTime');
-			var video = document.getElementById("video");
-			var sceneStart = 0;
-			var sceneEnd = sceneLength;
 			var socket = io();
 
-			socket.on('sceneChanged', function(obj) {
-				currentScene = obj.index;
-				currentTime = obj.time;
-				syncClock();
-				sceneChanged();
-			});
+			function open() {
+
+				var opts = {
+					screen: $('#screenSelect').val(),
+					scene: $('#sceneSelect').val(),
+					time: 0
+				};
+
+				socket.emit('open', opts);
+				log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
+			}
+
+			function log(message) {
+				socket.emit('log', message);
+			}
 
 			socket.on('log', function(msg){
 				$('#messages').append($('<li>').text(msg));
 				$('#messages').scrollTop($('#messages').prop('scrollHeight'));
 			});
-
-			video.src = "http://localhost:80/" + $('#videoSelect').val();
-
-			function syncClock() {
-
-				clearInterval(clockInterval);
-
-				clockInterval = setInterval(function() {
-					if (currentTime === sceneLength - 1) {
-						currentTime = 0;
-					} else {
-						currentTime += 1;
-					}
-
-					if (video.currentTime >= sceneEnd - 1) {
-						video.currentTime = sceneStart;
-						video.play();
-					}
-					
-					$currentTime.text(currentTime + 1);
-				}, 1000);
-
-			}
-
-			function sceneChanged() {
-				sceneStart = sceneLength * currentScene;
-				sceneEnd = sceneStart + sceneLength;
-				video.currentTime = sceneStart + currentTime;
-				video.play();
-			}
 			
-			$('#videoSelect').on('change', function() {
-				video.src = $('#videoSelect').val();
-			});
-
-			$('.sceneChange').on('click', function() {
-				socket.emit('sceneChanged', 
-					{
-						index: $('.sceneChange').index(this),
-						time: currentTime // unity will pass the current time synced to the audio
-					});
+			$('#open').on('click', function() {
+				open();
 			});
 
 			$('form').submit(function() {
 				socket.emit('log', $('#m').val());
 				$('#m').val('');
 				return false;
-			});
-
-			$('#fullscreen').on('click', function() {
-				video.webkitRequestFullscreen();
 			});
 
 		</script>
