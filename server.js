@@ -1,9 +1,15 @@
-var port = process.argv[2] || 3000;
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
-var Server = require('socket.io');
-var io = new Server(port, {});
+var io = require('socket.io')(http);
+
+var port = process.argv[2] || 3000;
+
+app.use(express.static('public'));
+
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
 
 io.on('connection', function(socket){
     
@@ -12,34 +18,23 @@ io.on('connection', function(socket){
         console.log(msg);
     });
 
-    socket.on('sceneChanged', function(obj) {
-        io.emit('sceneChanged', obj);
-        console.log('change to scene', obj.index);
-    });
-
-    socket.on('play', function(obj) {
-        io.emit('play', {
+    socket.on('open', function(obj) {
+        io.emit('open', {
             options: {
                 audioOutput:'hdmi', 
                 blackBackground: true, 
                 disableKeys: false, 
                 disableOnScreenDisplay: false
             },
-            video: obj.video,
+            screen: obj.screen,
+            scene: obj.scene,
             time: obj.time
         });
-        console.log('play', video);
+        console.log('open', obj);
     });
-});
-
-console.log('server listening on *:' + port);
-
-app.use(express.static('public'));
-
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
 });
 
 http.listen(port, function(){
     console.log('listening on *:' + port);
 });
+
