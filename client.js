@@ -1,6 +1,6 @@
 // node client.js
 
-var config = require('config');
+var config = require('./config');
 var omx = require('omx-interface');
 var io = require('socket.io-client');
 var socket = io.connect(config.serverAddr);
