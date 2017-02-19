@@ -39,3 +39,17 @@ $('form').submit(function() {
     $('#m').val('');
     return false;
 });
+
+$(function() {
+
+    function resize() {
+        var $options = $('#options');
+        var $messages = $('#messages');
+        var $postMessage = $('#postMessage');
+        $messages.height(window.innerHeight - $options.outerHeight() - $postMessage.outerHeight());
+    }
+
+    $(window).on('resize', resize());
+
+    resize();
+});

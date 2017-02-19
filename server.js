@@ -50,7 +50,7 @@ io.on('connection', function(socket){
 
     socket.on('seek', function(time) {
         io.emit('seek', time);
-        log('seek', time);
+        log('seek: ' + time);
     });
 });
 
