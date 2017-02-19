@@ -6,8 +6,8 @@ var io = require('socket.io-client');
 var socket = io.connect(config.serverAddr);
 
 socket.on('connection', function(s) {
+    s.emit('log', config.screen + ' connected to ' + config.serverAddr);
     s.join(config.screen);
-	s.emit('log', config.screen + ' connected to ' + config.serverAddr);
 });
 
 socket.on('log', function(msg) {
