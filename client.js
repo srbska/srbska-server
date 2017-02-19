@@ -5,9 +5,9 @@ var omx = require('omx-interface');
 var io = require('socket.io-client');
 var socket = io.connect(config.serverAddr);
 
-socket.on('connect', function() {
-    socket.join(config.screen);
-	socket.emit('log', config.screen + ' connected to ' + config.serverAddr);
+socket.on('connect', function(s) {
+    s.join(config.screen);
+	s.emit('log', config.screen + ' connected to ' + config.serverAddr);
 });
 
 socket.on('log', function(msg) {
