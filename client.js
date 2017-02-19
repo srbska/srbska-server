@@ -16,6 +16,7 @@ socket.on('log', function(msg) {
 
 socket.on('open', function(obj) {
     var video = obj.screen + '_' + obj.scene + '.mp4';
+    omx.stop();
     omx.open(video, obj.options);
     omx.setPosition(obj.time);
 });

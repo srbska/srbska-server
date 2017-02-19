@@ -24,7 +24,6 @@ io.on('connection', function(socket){
 
     socket.on('room', function(room) {
         socket.join(room);
-        log('room: ' + room + ' joined');
     });
 
     socket.on('open', function(obj) {
