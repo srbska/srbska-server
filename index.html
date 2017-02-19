@@ -36,6 +36,7 @@
 		</div>
 		<div>
 			<button id="open">Open Video</button>
+			<button id="close">Close Video</button>
 		</div>
 		<ul id="messages"></ul>
 		<form action="">
@@ -58,6 +59,10 @@
 				log('open screen:' + opts.screen + ', scene:' + opts.scene + ', time:' + opts.time);
 			}
 
+			function close() {
+				socket.emit('close');
+			}
+
 			function log(message) {
 				socket.emit('log', message);
 			}
@@ -69,6 +74,10 @@
 			
 			$('#open').on('click', function() {
 				open();
+			});
+
+			$('#close').on('click', function() {
+				close();
 			});
 
 			$('form').submit(function() {
