@@ -7,7 +7,7 @@ var socket = io.connect(config.serverAddr);
 
 socket.on('connect', function() {
     socket.emit('log', config.screen + ' connected to ' + config.serverAddr);
-    socket.emit('room', room);
+    socket.emit('room', config.screen);
 });
 
 socket.on('log', function(msg) {
